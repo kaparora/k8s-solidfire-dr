@@ -71,16 +71,33 @@ def main():
         logging.info('You have selected all namespaces')
     k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
     k8s_secondary = K8SClient(secondary_k8s_kubeconfig, no_execute)
+    secondary_pvc_suffix = k8s_config['secondary_pvc_suffix']
+
 
     if all_namespaces:
         if operation == "start":
             start(k8s_primary, k8s_secondary)
 
 
-def start(k8s_primary, k8s_secondary):
-    primary_pvcs = k8s_primary.get_all_pvc_for_storage_class('basic')
-    for pv in pvcs.items:
-        print pv.metadata.name
+def start(k8s_primary, k8s_secondary, secondary_pvc_suffix):
+
+    #read all secondary pvcs and create a name array
+    secondary_pvcs = k8s_secondary.get_all_pvc()
+    secondary_pvc_names = []
+    for pvc in secondary_pvcs.items:
+        secondary_pvc_names.append(pvc.metadata.name)
+    logging.info('list of secondary pvc names: %s', secondary_pvc_names)
+
+    #read all primary pvcs and create duplicate on secondary if it doesnt already exist
+    primary_pvcs = k8s_primary.get_all_pvc()
+    for pvc in primary_pvcs.items:
+        secondary_pvc_name = pvc.metadata.name + secondary_pvc_suffix
+        logging.info('checking if pvc %s is duplicated on secondary as secondary_pvc_name',
+                     pvc.metadata.name, secondary_pvc_name)
+        if secondary_pvc_name in secondary_pvc_names:
+           print 'pvc '+ pvc.metadata.name + ' is not yet on secondary'
+
+
 
 
 
