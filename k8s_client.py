@@ -45,7 +45,7 @@ class K8SClient(object):
 
         #setting spec for pvc
         duplicate_pvc_spec = client.V1PersistentVolumeClaimSpec()
-        duplicate_pvc_spec.access_mode = original_pvc.spec.access_mode
+        duplicate_pvc_spec.access_modes = original_pvc.spec.access_modes
         duplicate_pvc_spec.resources = original_pvc.spec.resources
         duplicate_pvc_spec.selector = original_pvc.spec.selector
         duplicate_pvc.spec = duplicate_pvc_spec
