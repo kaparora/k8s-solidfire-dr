@@ -1,0 +1,4 @@
+k8sdr
+*.log
+.idea
+.DS_Store
