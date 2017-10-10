@@ -8,6 +8,7 @@ import sys
 import os.path
 import io
 import logging
+from k8s_client import K8SClient
 from time import strftime
 
 def main():
@@ -69,6 +70,12 @@ def main():
         all_namespaces = True
         logging.info('You have selected all namespaces')
 
+    if all_namespaces:
+        if operation == "start":
+            k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
+            pvcs = k8s_primary.get_all_pvcs()
+            for pv in pvcs:
+                print pv.metadata.name
 
 
 

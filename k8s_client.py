@@ -6,7 +6,7 @@ Github: @kapilarora
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
-class OntapSelect(object):
+class K8SClient(object):
 
     def __init__(self, kubeconfig, no_execute):
 
