@@ -50,7 +50,7 @@ class K8SClient(object):
         duplicate_pvc_spec.selector = original_pvc.spec.selector
         duplicate_pvc.spec = duplicate_pvc_spec
 
-        new_pvc = self._client.create_namespaced_pod(original_pvc.metadata.namespace, duplicate_pvc)
+        new_pvc = self._client.create_namespaced_persistent_volume_claim(original_pvc.metadata.namespace, duplicate_pvc)
 
 
 
