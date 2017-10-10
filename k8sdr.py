@@ -69,13 +69,19 @@ def main():
     if len(namespaces) == 1 and namespaces[0] == '*':
         all_namespaces = True
         logging.info('You have selected all namespaces')
+    k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
+    k8s_secondary = K8SClient(secondary_k8s_kubeconfig, no_execute)
 
     if all_namespaces:
         if operation == "start":
-            k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
-            pvcs = k8s_primary.get_all_pvcs()
-            for pv in pvcs.items:
-                print pv.metadata.name
+            start(k8s_primary, k8s_secondary)
+
+
+def start(k8s_primary, k8s_secondary):
+    primary_pvcs = k8s_primary.get_all_pvc_for_storage_class('basic')
+    for pv in pvcs.items:
+        print pv.metadata.name
+
 
 
 
