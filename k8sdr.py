@@ -95,7 +95,8 @@ def start(k8s_primary, k8s_secondary, secondary_pvc_suffix):
         logging.info('checking if pvc %s is duplicated on secondary as %s',
                      pvc.metadata.name, secondary_pvc_name)
         if secondary_pvc_name not in secondary_pvc_names:
-           print 'pvc '+ pvc.metadata.name + ' is not yet on secondary'
+            print 'pvc '+ pvc.metadata.name + ' is not yet on secondary'
+            print pvc
 
 
 
