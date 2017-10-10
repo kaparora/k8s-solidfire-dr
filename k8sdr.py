@@ -8,6 +8,7 @@ import sys
 import os.path
 import io
 import logging
+
 from k8s_client import K8SClient
 from time import strftime
 
@@ -71,15 +72,18 @@ def main():
         logging.info('You have selected all namespaces')
     k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
     k8s_secondary = K8SClient(secondary_k8s_kubeconfig, no_execute)
-    secondary_pvc_suffix = k8s_config['secondary_pvc_suffix']
+    secondary_suffix = k8s_config['secondary_suffix']
+    if secondary_suffix is None
+        secondary_suffix = ''
+
 
 
     if all_namespaces:
         if operation == "start":
-            start(k8s_primary, k8s_secondary, secondary_pvc_suffix)
+            start(k8s_primary, k8s_secondary, secondary_suffix)
 
 
-def start(k8s_primary, k8s_secondary, secondary_pvc_suffix):
+def start(k8s_primary, k8s_secondary, secondary_suffix):
 
     #read all secondary pvcs and create a name array
     secondary_pvcs = k8s_secondary.get_all_pvcs()
@@ -91,12 +95,13 @@ def start(k8s_primary, k8s_secondary, secondary_pvc_suffix):
     #read all primary pvcs and create duplicate on secondary if it doesnt already exist
     primary_pvcs = k8s_primary.get_all_pvcs()
     for pvc in primary_pvcs.items:
-        secondary_pvc_name = pvc.metadata.name + secondary_pvc_suffix
+        secondary_pvc_name = pvc.metadata.name + secondary_suffix
         logging.info('checking if pvc %s is duplicated on secondary as %s',
                      pvc.metadata.name, secondary_pvc_name)
         if secondary_pvc_name not in secondary_pvc_names:
             print 'pvc '+ pvc.metadata.name + ' is not yet on secondary'
             print pvc
+            k8s_secondary.create_duplicate_pvc(pvc, secondary_suffix)
 
 
 
