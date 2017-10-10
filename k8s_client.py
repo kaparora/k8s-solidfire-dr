@@ -22,7 +22,7 @@ class K8SClient(object):
         return self._client.list_persistent_volume_claim_for_all_namespaces()
 
     def get_all_pvc_for_storage_class(self, storageclass):
-        storage_class_selector = 'pvc.spec.storage_class_name='+ storageclass
+        storage_class_selector = 'spec.storage_class_name='+ storageclass
         return self._client.list_persistent_volume_claim_for_all_namespaces(field_selector=storage_class_selector)
 
 
