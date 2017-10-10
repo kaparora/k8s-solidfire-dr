@@ -82,14 +82,14 @@ def main():
 def start(k8s_primary, k8s_secondary, secondary_pvc_suffix):
 
     #read all secondary pvcs and create a name array
-    secondary_pvcs = k8s_secondary.get_all_pvc()
+    secondary_pvcs = k8s_secondary.get_all_pvcs()
     secondary_pvc_names = []
     for pvc in secondary_pvcs.items:
         secondary_pvc_names.append(pvc.metadata.name)
     logging.info('list of secondary pvc names: %s', secondary_pvc_names)
 
     #read all primary pvcs and create duplicate on secondary if it doesnt already exist
-    primary_pvcs = k8s_primary.get_all_pvc()
+    primary_pvcs = k8s_primary.get_all_pvcs()
     for pvc in primary_pvcs.items:
         secondary_pvc_name = pvc.metadata.name + secondary_pvc_suffix
         logging.info('checking if pvc %s is duplicated on secondary as secondary_pvc_name',
