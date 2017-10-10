@@ -48,6 +48,8 @@ class K8SClient(object):
         duplicate_pvc_spec.access_modes = original_pvc.spec.access_modes
         duplicate_pvc_spec.resources = original_pvc.spec.resources
         duplicate_pvc_spec.selector = original_pvc.spec.selector
+        if original_pvc.spec.storage_class_name:
+            duplicate_pvc_spec.storage_class_name = original_pvc.spec.storage_class_name + secondary_suffix
         duplicate_pvc.spec = duplicate_pvc_spec
 
         new_pvc = self._client.create_namespaced_persistent_volume_claim(original_pvc.metadata.namespace, duplicate_pvc)
