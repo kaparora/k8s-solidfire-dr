@@ -44,7 +44,7 @@ class K8SClient(object):
         duplicate_pvc.spec = duplicate_pvc_spec
 
         new_pvc = self._client.create_namespaced_pod(original_pvc.metadata.namespace, duplicate_pvc)
-        
+
 
 
 

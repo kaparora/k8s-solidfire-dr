@@ -73,7 +73,7 @@ def main():
     k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
     k8s_secondary = K8SClient(secondary_k8s_kubeconfig, no_execute)
     secondary_suffix = k8s_config['secondary_suffix']
-    if secondary_suffix is None
+    if secondary_suffix is None:
         secondary_suffix = ''
 
 
