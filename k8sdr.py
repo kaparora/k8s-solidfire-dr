@@ -74,7 +74,7 @@ def main():
         if operation == "start":
             k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
             pvcs = k8s_primary.get_all_pvcs()
-            for pv in pvcs:
+            for pv in pvcs.items:
                 print pv.metadata.name
 
 
