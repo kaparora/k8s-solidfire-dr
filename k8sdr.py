@@ -92,7 +92,7 @@ def start(k8s_primary, k8s_secondary, secondary_pvc_suffix):
     primary_pvcs = k8s_primary.get_all_pvcs()
     for pvc in primary_pvcs.items:
         secondary_pvc_name = pvc.metadata.name + secondary_pvc_suffix
-        logging.info('checking if pvc %s is duplicated on secondary as secondary_pvc_name',
+        logging.info('checking if pvc %s is duplicated on secondary as %s',
                      pvc.metadata.name, secondary_pvc_name)
         if secondary_pvc_name in secondary_pvc_names:
            print 'pvc '+ pvc.metadata.name + ' is not yet on secondary'
