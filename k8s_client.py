@@ -6,6 +6,7 @@ Github: @kapilarora
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
+
 class K8SClient(object):
 
     def __init__(self, kubeconfig, no_execute):
@@ -22,11 +23,11 @@ class K8SClient(object):
         return self._client.list_persistent_volume_claim_for_all_namespaces()
 
     def create_duplicate_pvc(self, original_pvc, secondary_suffix):
-        duplicate_pvc = kubernetes.client.V1PersistentVolumeClaim()
+        duplicate_pvc = client.V1PersistentVolumeClaim()
 
 
         #setting metadata for pvc
-        duplicate_pvc_metadata = kubernetes.client.V1ObjectMeta()
+        duplicate_pvc_metadata = client.V1ObjectMeta()
         duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-class'] = \
             original_pvc.metadata.annotations['volume.beta.kubernetes.io/storage-class'] + secondary_suffix
         duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-provisioner'] = \
@@ -37,7 +38,7 @@ class K8SClient(object):
         duplicate_pvc.metadata = duplicate_pvc_metadata
 
         #setting spec for pvc
-        duplicate_pvc_spec = kubernetes.client.V1PersistentVolumeClaimSpec()
+        duplicate_pvc_spec = client.V1PersistentVolumeClaimSpec()
         duplicate_pvc_spec.access_mode = original_pvc.spec.access_mode
         duplicate_pvc_spec.resources = original_pvc.spec.resources
         duplicate_pvc_spec.selector = original_pvc.spec.selector
