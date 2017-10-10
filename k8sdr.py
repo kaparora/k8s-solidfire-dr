@@ -76,7 +76,7 @@ def main():
 
     if all_namespaces:
         if operation == "start":
-            start(k8s_primary, k8s_secondary)
+            start(k8s_primary, k8s_secondary, secondary_pvc_suffix)
 
 
 def start(k8s_primary, k8s_secondary, secondary_pvc_suffix):
