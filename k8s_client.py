@@ -28,14 +28,14 @@ class K8SClient(object):
 
         #setting metadata for pvc
         duplicate_pvc_metadata = client.V1ObjectMeta()
-        original_storage_class = original_pvc.metadata.annotations['volume.beta.kubernetes.io/storage-class']
+        
         if 'volume.beta.kubernetes.io/storage-class' in original_pvc.metadata.annotations:
             duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-class'] = \
                 original_pvc.metadata.annotations['volume.beta.kubernetes.io/storage-class'] + secondary_suffix
         if 'volume.beta.kubernetes.io/storage-provisioner' in original_pvc.metadata.annotations:
             duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-provisioner'] = \
                 original_pvc.metadata.annotations['volume.beta.kubernetes.io/storage-provisioner']
-        
+
 
         duplicate_pvc_metadata.labels = original_pvc.metadata.labels
         duplicate_pvc_metadata.name = original_pvc.metadata.name + secondary_suffix
