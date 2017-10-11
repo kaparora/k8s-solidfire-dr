@@ -73,17 +73,19 @@ def main():
     k8s_primary = K8SClient(primary_k8s_kubeconfig, no_execute)
     k8s_secondary = K8SClient(secondary_k8s_kubeconfig, no_execute)
     secondary_suffix = k8s_config['secondary_suffix']
+
+    #maybe this isnt required!?
     if secondary_suffix is None:
         secondary_suffix = ''
 
-
+    secondary_storage_class_when_primary_not_set = k8s_config['secondary_storage_class_when_primary_not_set']
 
     if all_namespaces:
         if operation == "start":
-            start(k8s_primary, k8s_secondary, secondary_suffix)
+            start(k8s_primary, k8s_secondary, secondary_suffix, secondary_storage_class_when_primary_not_set)
 
 
-def start(k8s_primary, k8s_secondary, secondary_suffix):
+def start(k8s_primary, k8s_secondary, secondary_suffix, secondary_storage_class_when_primary_not_set):
 
     #read all secondary pvcs and create a name array
     secondary_pvcs = k8s_secondary.get_all_pvcs()
@@ -98,22 +100,15 @@ def start(k8s_primary, k8s_secondary, secondary_suffix):
         secondary_pvc_name = pvc.metadata.name + secondary_suffix
         logging.info('checking if pvc %s is duplicated on secondary as %s',
                      pvc.metadata.name, secondary_pvc_name)
+
         if secondary_pvc_name not in secondary_pvc_names:
             print 'pvc '+ pvc.metadata.name + ' is not yet on secondary'
             print pvc
-            k8s_secondary.create_duplicate_pvc(pvc, secondary_suffix)
+            secondary_pvc = k8s_secondary.create_duplicate_pvc(pvc, secondary_suffix, secondary_storage_class_when_primary_not_set)
 
-
-
-
-
-
-
-
-
-
-
-
+            #1wait until pvc is bound?
+            #2read pv for both pvc
+            #3createVolumePair
 
 
 

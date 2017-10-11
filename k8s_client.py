@@ -22,17 +22,20 @@ class K8SClient(object):
     def get_all_pvcs(self):
         return self._client.list_persistent_volume_claim_for_all_namespaces()
 
-    def create_duplicate_pvc(self, original_pvc, secondary_suffix):
+    def create_duplicate_pvc(self, original_pvc, secondary_suffix, secondary_storage_class_when_primary_not_set):
         duplicate_pvc = client.V1PersistentVolumeClaim()
 
 
         #setting metadata for pvc
         duplicate_pvc_metadata = client.V1ObjectMeta()
         duplicate_pvc_metadata.annotations = {}
+        storage_class_set = False
 
         if 'volume.beta.kubernetes.io/storage-class' in original_pvc.metadata.annotations:
             duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-class'] = \
                 original_pvc.metadata.annotations['volume.beta.kubernetes.io/storage-class'] + secondary_suffix
+            storage_class_set = False
+
         if 'volume.beta.kubernetes.io/storage-provisioner' in original_pvc.metadata.annotations:
             duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-provisioner'] = \
                 original_pvc.metadata.annotations['volume.beta.kubernetes.io/storage-provisioner']
@@ -50,9 +53,16 @@ class K8SClient(object):
         duplicate_pvc_spec.selector = original_pvc.spec.selector
         if original_pvc.spec.storage_class_name:
             duplicate_pvc_spec.storage_class_name = original_pvc.spec.storage_class_name + secondary_suffix
+            storage_class_set = False
+
+        if storage_class_set && secondary_storage_class_when_primary_not_set:
+            duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-class'] = \
+                secondary_storage_class_when_primary_not_set
+            duplicate_pvc_spec.storage_class_name = secondary_storage_class_when_primary_not_set
+
         duplicate_pvc.spec = duplicate_pvc_spec
 
-        new_pvc = self._client.create_namespaced_persistent_volume_claim(original_pvc.metadata.namespace, duplicate_pvc)
+        return self._client.create_namespaced_persistent_volume_claim(original_pvc.metadata.namespace, duplicate_pvc)
 
 
 
