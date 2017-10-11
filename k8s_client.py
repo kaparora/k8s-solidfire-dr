@@ -55,7 +55,7 @@ class K8SClient(object):
             duplicate_pvc_spec.storage_class_name = original_pvc.spec.storage_class_name + secondary_suffix
             storage_class_set = False
 
-        if storage_class_set && secondary_storage_class_when_primary_not_set:
+        if storage_class_set and secondary_storage_class_when_primary_not_set:
             duplicate_pvc_metadata.annotations['volume.beta.kubernetes.io/storage-class'] = \
                 secondary_storage_class_when_primary_not_set
             duplicate_pvc_spec.storage_class_name = secondary_storage_class_when_primary_not_set
